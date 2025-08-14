@@ -90,13 +90,11 @@ def main():
 
     value = float(filtered_df['Final Adequacy Level'].values[0])
 
-    st.subheader(
-        f"{selected_district} is {value:.0%} funded."
+    st.subheader(f"{selected_district} is {value:.0%} funded.") 
+    st.write("")
+    st.subheader(f"This district needs \\${filtered_df['Adequacy Funding Gap'].values[0]:,.0f} to be adequately funded. That amounts to \\${filtered_df['Adequacy Funding Gap (Per Pupil)'].values[0]:,.0f} per student.")
 
-        f"This district needs \\${filtered_df['Adequacy Funding Gap'].values[0]:,.0f} to be adequately funded. "
-
-        f"That amounts to \\${filtered_df['Adequacy Funding Gap (Per Pupil)'].values[0]:,.0f} per student."
-    )
+    
 
 #     numeric_cols = ["CPS Surplus Revenue"]
 #     # Calculate min and max across all numeric columns (overall)
