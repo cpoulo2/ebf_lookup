@@ -67,12 +67,12 @@ def main():
     st.header("CTU's Illinois School District Funding Needs Lookup")
 
     st.markdown("""
-    This is a tool to quickly look up your district's funding needs.
+    This is a tool allows you to:
     
-    - Look up by district
+    - Look up funding needs by district;
 
-    - Compare multiple districts
-
+    - Compare funding needs of multiple districts; and
+    
     - View the State of Illinois' funding needs along with the top 10 most underfunded districts.
     """, unsafe_allow_html=True)
 
