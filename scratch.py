@@ -3,11 +3,16 @@ import pandas as pd
 
 df = pd.read_csv(r"C:\Users\christopherpoulos\work\projects\ebf_lookup\data.csv")
 df2 = pd.read_csv(r"C:\Users\christopherpoulos\work\projects\ebf_lookup\data_clean_names.csv")
-print(df2.columns)
-print(df.columns)
+
 # Filter out Organization Type Regional and Labs
 df = df[df['Organization Type'] != 'Regional']
 df = df[df['Organization Type'] != 'Labs']
+# Strip all column names
+df.columns = df.columns.str.strip()
+print(df2.columns)
+print(df.columns)
+
+
 # Join df2 columns RCD, TYP, and School
 # %%
 df2["District ID"] = df2['RCD'].astype(str)+df2['Type'].astype(str).str.zfill(2)+df2['School'].astype(str).str[:-2]
@@ -35,6 +40,4 @@ df_il = pd.DataFrame([{
 # %%
 df = pd.concat([df, df_il], ignore_index=False)
 
-#Drop the last column (final adequacy level keeps duplicating)
-#df = df.iloc[:, :-1]
-# %%
+
