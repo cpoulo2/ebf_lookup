@@ -138,7 +138,7 @@ def main():
 
     # Select multiple districts
 
-    selected_districts = st.multiselect("**Select School Districts**", options=df['District Name'].unique().tolist(), default=["Chicago Public Schools District 299"])
+    selected_districts = st.multiselect("**Select School Districts**", options=df['District Name'].unique().tolist(), default=["Chicago Public Schools District 299","State of Illinois"])
 
     if not selected_districts:
         st.warning("Please select at least one school district.")
