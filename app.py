@@ -150,7 +150,7 @@ def main():
         if pd.isna(filtered_df['Local Affiliation'].values[0]):
             st.write(f"{selected_district} is not affiliated with any union.")
         else:
-            st.markdown(f"""{selected_district} is affiliated with <b><span style="background-color": yellow>{filtered_df['Local Affiliation'].values[0]}</span></b>.""", unsafe_allow_html=True)
+            st.markdown(f"""{selected_district} is affiliated with <b><span style="background-color: yellow">{filtered_df['Local Affiliation'].values[0]}</span></b>.""", unsafe_allow_html=True)
 
     st.subheader("Compare Multiple Districts")
 
