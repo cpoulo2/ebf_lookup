@@ -1,3 +1,4 @@
+# %%
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -12,48 +13,59 @@ def load_data():
     try:
         df = pd.read_csv(r"data.csv")
         df2 = pd.read_csv(r"data_clean_names.csv")
-        print(df2.columns)
-        print(df.columns)
+        df3 = pd.read_csv(r"ift_iea_crosswalk.csv")
+#        print(df2.columns)
+#        print(df.columns)
+#        print(df3.columns)
         # Filter out Organization Type Regional and Labs
         df = df[df['Organization Type'] != 'Regional']
         df = df[df['Organization Type'] != 'Labs']
         # Strip all column names
         df.columns = df.columns.str.strip()
-        print(df2.columns)
-        print(df.columns)
 
 
-        # Join df2 columns RCD, TYP, and School
-        # %%
+        # Prep df2 columns RCD, TYP, and School to join
+
         df2["District ID"] = df2['RCD'].astype(str)+df2['Type'].astype(str).str.zfill(2)+df2['School'].astype(str).str[:-2]
         # Keep if RecType is Dist
         df2 = df2[df2['RecType'] == 'Dist']
         df2 = df2[["District ID", "FacilityName"]]
 
-        print(df2.head())
-        # %%
+        # Prep IFT/IEA local crosswalk to join 
+
+        df3["RCDT Code"] = df3["RCDT Code"].astype(str).apply(lambda x: x.zfill(11) if len(x) == 10 else x)
+
+        df3["RCDT Code"] = df3["RCDT Code"]+"00"
+        df3 = df3[["RCDT Code", "Local Affiliation"]]
+        print(df3.head())
+
+    
+        
         df = df.merge(df2,on="District ID",how="left")
+        df = df.merge(df3,left_on="District ID",right_on="RCDT Code",how="left")
         df = df.drop(columns="District ID")
+        df = df.drop(columns="RCDT Code")
         # Make district name = facility name
         df["District Name"] = df["FacilityName"]
         df = df.drop(columns="FacilityName")
-        # %%
+        
         df_il = pd.DataFrame([{
             "District Name": "State of Illinois",
             "Organization Type": "State of Illinois",
             "Total ASE": 1789162.03,
             "Adequacy Funding Gap": 5679275708.44,
             "Final Adequacy Level": 0.843432139259095,
-            "Adequacy Funding Gap (Per Pupil)": 3174.26572507801
+            "Adequacy Funding Gap (Per Pupil)": 3174.26572507801,
+            "Local Affiliation": None
         }])
         # Concatenate df and df_il
-        # %%
+        
         df = pd.concat([df, df_il], ignore_index=False)
         return df
     except FileNotFoundError as e:
         st.error(f"Data file not found: {e}. Please ensure the CSV files are in the correct location.")
         return None
-
+#%%
 def main():    
     # Load data
     df=load_data()
@@ -69,7 +81,7 @@ def main():
     st.markdown("""
     This tool allows you to:
     
-    - Look up funding needs by district;
+    - Look up funding needs by district and union affiliation;
 
     - Compare funding needs of multiple districts; and
 
@@ -114,6 +126,7 @@ def main():
 
     selected_district = st.selectbox("**Select School District**", options=df['District Name'].unique().tolist(), index=300)
 
+
     if not selected_district:
         st.warning("Please select at least one school district.")
         return
@@ -133,6 +146,11 @@ def main():
         st.write(f"The State of Illinois needs \\${filtered_df['Adequacy Funding Gap'].values[0]:,.0f} to adequately fund schools. That amounts to \\${filtered_df['Adequacy Funding Gap (Per Pupil)'].values[0]:,.0f} per student.")
     else:
         st.write(f"This district needs \\${filtered_df['Adequacy Funding Gap'].values[0]:,.0f} to be adequately funded. That amounts to \\${filtered_df['Adequacy Funding Gap (Per Pupil)'].values[0]:,.0f} per student.")
+    if selected_district != "State of Illinois":
+        if pd.isna(filtered_df['Local Affiliation'].values[0]):
+            st.write(f"{selected_district} is not affiliated with any union.")
+        else:
+            st.write(f"{selected_district} is affiliated with **{filtered_df['Local Affiliation'].values[0]}**")
 
     st.subheader("Compare Multiple Districts")
 
@@ -181,3 +199,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+# %%
