@@ -179,7 +179,7 @@ def main():
     # SHow a table with the top 10 most underfunded school districts and Illinois
     # Sort by "Adequacy Funding Gap" most to least
 
-    st.subheader("Underingfunding in the State of Illinois and the Top 10 Most Underfunded School Districts in Illinois")
+    st.subheader("Underfunding in the State of Illinois and the Top 10 Most Underfunded School Districts in Illinois")
 
     top_10 = df.sort_values("Adequacy Funding Gap", ascending=False).head(10)
 
