@@ -23,6 +23,8 @@ def load_data():
         # Strip all column names
         df.columns = df.columns.str.strip()
 
+        print(df.head())
+
 
         # Prep df2 columns RCD, TYP, and School to join
 
@@ -49,11 +51,21 @@ def load_data():
         df["District Name"] = df["FacilityName"]
         df = df.drop(columns="FacilityName")
 
+        df["Adequacy Funding Gap"] = pd.to_numeric(df["Adequacy Funding Gap"], errors="coerce")
+        df["New FY26 Funding"] = pd.to_numeric(df["New FY26 Funding"], errors="coerce")
+
         # Update Adequacy Gaps and Levels to reflect Fy26 New Appropriation
         df["Adequacy Funding Gap"] = df["Adequacy Funding Gap"] - df["New FY26 Funding"]
         df["Adequacy Funding Gap (Per Pupil)"] = df["Adequacy Funding Gap"] / df["Total ASE"]
         df["Final Resources"] = df["Final Resources"] + df["New FY26 Funding"]
-        df["Final Adequacy Level"] = df["Final Resources"] / df["Final Adequacy Target"] 
+        df["Final Adequacy Level"] = df["Final Resources"] / df["Final Adequacy Target"]
+
+        # Drop New FY26 Funding, Final Resources, and Final Adequacy Target
+
+        df = df[['District Name', 'County', 'Organization Type', 'Total ASE',
+       'Adequacy Funding Gap', 'Final Adequacy Level',
+       'Adequacy Funding Gap (Per Pupil)', 'Local Affiliation']]
+
         
         df_il = pd.DataFrame([{
             "District Name": "State of Illinois",
@@ -80,6 +92,8 @@ def main():
         return
 
     # Main app
+
+    st.write(df)
     st.set_page_config(page_title="EBF Lookup", layout="centered")
 
     st.header("CTU's Illinois School District Funding Needs Lookup")
