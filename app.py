@@ -53,9 +53,9 @@ def load_data():
             "District Name": "State of Illinois",
             "Organization Type": "State of Illinois",
             "Total ASE": 1789162.03,
-            "Adequacy Funding Gap": 5679275708.44,
+            "Adequacy Funding Gap": 5377769817.10,
             "Final Adequacy Level": 0.843432139259095,
-            "Adequacy Funding Gap (Per Pupil)": 3174.26572507801,
+            "Adequacy Funding Gap (Per Pupil)":  3005.75,
             "Local Affiliation": None
         }])
         # Concatenate df and df_il
