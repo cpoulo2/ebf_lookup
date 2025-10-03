@@ -93,7 +93,6 @@ def main():
 
     # Main app
 
-    st.write(df)
     st.set_page_config(page_title="EBF Lookup", layout="centered")
 
     st.header("CTU's Illinois School District Funding Needs Lookup")
