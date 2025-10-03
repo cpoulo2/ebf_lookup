@@ -48,6 +48,12 @@ def load_data():
         # Make district name = facility name
         df["District Name"] = df["FacilityName"]
         df = df.drop(columns="FacilityName")
+
+        # Update Adequacy Gaps and Levels to reflect Fy26 New Appropriation
+        df["Adequacy Funding Gap"] = df["Adequacy Funding Gap"] - df["New FY26 Funding"]
+        df["Adequacy Funding Gap (Per Pupil)"] = df["Adequacy Funding Gap"] / df["Total ASE"]
+        df["Final Resources"] = df["Final Resources"] + df["New FY26 Funding"]
+        df["Final Adequacy Level"] = df["Final Resources"] / df["Final Adequacy Target"] 
         
         df_il = pd.DataFrame([{
             "District Name": "State of Illinois",
